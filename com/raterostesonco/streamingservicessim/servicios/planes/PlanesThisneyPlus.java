@@ -1,4 +1,4 @@
-package servicios.planes;
+package com.raterostesonco.streamingservicessim.servicios.planes;
 
 public enum PlanesThisneyPlus implements Plan {
     NORMAL(130), PREMIUM(160);
