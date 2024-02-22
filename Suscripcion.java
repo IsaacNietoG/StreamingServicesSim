@@ -15,7 +15,8 @@ import planes.Plan;
    de cada Suscripción, el que se encarga es la misma Suscripción y es esta la que, después de ser activada por Servicio, llama
    a Banco para cobrarle al Usuario.
 
-   
+   Esta es la parte del proyecto que implementa Strategy, pues dependiendo del objeto Plan que componga a la instancia de Suscripción,
+   la misma deberá de cobrar de manera distinta.
  */
 public class Suscripcion {
 
@@ -34,22 +35,47 @@ public class Suscripcion {
        la Suscripción esté recibiendo una combinación válida entre estas dos, pero realmente puede que no sea necesario debido
        a que la creación de Suscripción se realizará dentro del Servicio en cuestión, donde, en teoría, solo tendremos acceso
        a los planes acordes.
+
+       @param   cliente    El cliente al cual está asociada la Suscripción
+                servicio   Servicio a cual está asociada la Suscripción
+                plan       Plan de la suscripción
      */
     public Suscripcion(Cliente cliente, Servicio servicio, Plan plan){
         
     }
 
     /**
-       Modifica el plan interno
+       Modifica el plan interno de la Suscripción. Importante señalar que este es el método principal que nos interesa a la hora de
+       implementar Strategy
+       Si incluimos una verificación de coherencia como la mencionada en el constructor de esta misma clase, lo más apropiado sería
+       volver a llamarla en este método.
+
+       @param   plan    El nuevo plan que pasará a componer a la Suscripción
      */
     public void cambioPlan(Plan plan){
         
     }
 
+    /**
+       Cancela la suscripción del cliente al Servicio
+
+       Debe de ser el método que es llamado desde el lado del Cliente y es el que realiza todas las acciones necesarias para desactivar
+       un plan. Esto es:
+       1, Cambiar su variable interna de suscripcionActiva a false
+       2. Llamar a eliminarSuscriptor del Servicio correspondiente.
+       3. Setear mesesActivo a 0
+     */
     public void cancelar(){
         
     }
 
+    /**
+       Manda una orden de cobro al Cliente de la Suscripción
+
+       Esto se debe manejar enviando la solicitud al Banco con el debido mensaje (usando el metodo cobrarCliente)
+       De la misma forma, debe de manejar el caso en el que este cobro no puede ser exitoso y por lo tanto se debe de cancelar la
+       suscripción. Consultar Banco.
+     */
     public void facturar(){
         
     }
