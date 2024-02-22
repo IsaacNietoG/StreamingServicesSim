@@ -32,14 +32,13 @@ public interface Servicio implements Notificador{
 
     void enviarRecomendacion();
     void cobrarClientes();
-    void cobrarCliente(Cliente c);
     List<List> darPlanes();
+    Suscripcion inscribirUsuario(Cliente usuario, Plan plan);
+    void cambiarPlanUsuario(Cliente cliente, Plan plan);
 
-
-    public static void main(String[] args) {
-
-    }
-
-
+    //Metodos de Notificador
+    void eliminarSuscriptor(Escuchador suscriptor);
+    void agregarSuscriptor(Escuchador suscriptor);
+    void notificar(String mensaje);
 
 }
