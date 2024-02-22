@@ -1,7 +1,9 @@
-package servicios;
+package com.raterostesonco.streamingservicessim.servicios;
 
-import planes.PlanesHVOMax;
+import servicios.planes.PlanesHVOMax;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 public class HVOMax implements Servicio {
 
@@ -18,7 +20,9 @@ public class HVOMax implements Servicio {
        correspondientes para este servicio
      */
     private HVOMax(){
-        
+        recomendaciones=new ArrayList<>(Arrays.asList("True Detective", "The Curious Case of Natalia Grace", "Murder in Boston: Roots, Rampage and Reckoning",
+                                                      "Love Life", "Legendary", "Mrs. Fletcher", "Minx", "Gordita Chronicles", "Succession", "Euphoria", "Mare of Easttown", "Curb Your Enthusiasm"));
+        listaSuscripciones = new ArrayList<>();
     }
 
     /**
@@ -41,8 +45,7 @@ public class HVOMax implements Servicio {
      */
     @Override
     public void enviarRecomendacion() {
-        // TODO Auto-generated method stub
-        
+        notificar(recomendaciones.get(new Random().nextInt(12)));
     }
 
     /**
@@ -52,7 +55,9 @@ public class HVOMax implements Servicio {
      */
     @Override
     public void cobrarClientes() {
-        // TODO Auto-generated method stub
+        for(cliente : listaSuscripciones){
+            cliente.facturar();
+        }
         
     }
 
