@@ -7,7 +7,7 @@ import java.util.ArrayList;
    de los distintos actores de este proyecto. En principio, cuando lleguemos a trabajar en nuestro Uso, esta
    clase y las distintas clases de Servicios serán las únicas con las que vamos a interactuar.
  */
-public class Cliente implements Suscriptor{
+public class Cliente implements Escuchador{
     
     private String nombre;
     private ArrayList<Suscripcion> suscripciones;
