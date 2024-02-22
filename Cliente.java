@@ -13,6 +13,11 @@ public class Cliente implements Escuchador{
     private ArrayList<Suscripcion> suscripciones;
     private double cuentaBanco;
 
+     public Cliente(String nombre, double cuentaBanco) {
+        this.nombre = nombre;
+        this.suscripciones = new ArrayList<>();
+        this.cuentaBanco = cuentaBanco;
+
 
     /**
        Este metodo se utiliza para recibir la lista de planes posibles que tiene un Servicio.
@@ -23,7 +28,15 @@ public class Cliente implements Escuchador{
        @param   servicio    El servicio del cual queremos obtener su lista de posibles planes.
      */
     public void pedirPlanes(Servicio servicio){
-        
+        List<Plan> planes = servicio.getPlanes();
+        if (planes != null && !planes.isEmpty()) {
+            System.out.println("Planes disponibles para el servicio " + servicio.getNombre() + ":");
+            for (Plan plan : planes) {
+                System.out.println(plan);
+            }
+        } else {
+            System.out.println("No hay planes disponibles para el servicio " + servicio.getNombre());
+        }
     }
 
     /**
@@ -35,7 +48,9 @@ public class Cliente implements Escuchador{
        @param   suscripcion    La suscripcion que desea cancelar el usuario.
      */
     public void cancelarServicio(Suscripcion suscricipcion){
-        
+        suscripcion.cancelar();
+        suscripciones.remove(suscripcion);
+        System.out.println("La suscripción ha sido cancelada: " + suscripcion);
     }
 
     /**
@@ -53,7 +68,14 @@ public class Cliente implements Escuchador{
        @return el éxito o fracaso de la transacción.
      */
     public boolean recibirCobro(double importe){
-        
+      if (cuentaBanco >= importe) {
+            cuentaBanco -= importe;
+            System.out.println("Cobro realizado exitosamente. Importe: " + importe);
+            return true;
+        } else {
+            System.out.println("Fallo en el cobro. Fondos insuficientes.");
+            return false;
+        }  
     }
 
 
@@ -67,7 +89,9 @@ public class Cliente implements Escuchador{
                 plan        El plan al cual se desea cambiar la suscripción
      */
     public void cambiarPlan(Servicio servicio, Plan plan){
-        
+      servicio.cambiarPlanUsuario(this, plan);
+        System.out.println("Plan cambiado a: " + plan + " para el servicio: " + servicio.getNombre());
+    }  
     }
 
 
@@ -82,19 +106,25 @@ public class Cliente implements Escuchador{
                 plan        El plan elegido para la suscripción
      */
     public void contratarServicio(Servicio servicio, Plan plan){
-        
+       Suscripcion nuevaSuscripcion = servicio.inscribirUsuario(this, plan);
+        if (nuevaSuscripcion != null) {
+            suscripciones.add(nuevaSuscripcion);
+            System.out.println("Nueva suscripción agregada: " + nuevaSuscripcion);
+        } else {
+            System.out.println("No se pudo agregar la nueva suscripción para el servicio: " + servicio.getNombre());
+        } 
     }
 
     public String darNombre(){
-
+      return nombre;
     }
 
     public ArrayList<Suscripcion> darSuscripciones(){
-        
+        return suscripciones;
     }
 
     public double darSaldoBancario(){
-        
+        return cuentaBanco;
     }
 
     /**
@@ -111,8 +141,10 @@ public class Cliente implements Escuchador{
        @param   mensajeString    El mensaje que se imprimirá en pantalla
      */
     public void recibirMensaje(String mensajeString){
-        
+        System.out.println("Mensaje para " + nombre + ": " + mensajeString);
+    }
+
     }
 
     
-}
+
