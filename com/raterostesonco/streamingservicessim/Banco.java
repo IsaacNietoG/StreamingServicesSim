@@ -1,12 +1,14 @@
+package src.main.com.raterostesonco.streamingservicessim;
+
 import java.util.ArrayList;
 
 
 /**
    Esta es la clase que centraliza los sistemas de pago de cada uno de los distintos Servicios
 
-   Para evitar que los Servicios tengan un acceso directo al saldo del Usuario, el Banco será
-   el intermediario entre los Servicios y el Cliente para que no se pierda ese encapsulamiento.
-   El Banco debe de poder realizar los intentos de cobro al usuario correspondiente, y de la misma manera,
+   Para evitar que los Servicios tengan un acceso directo al saldo del Usuario, el src.main.com.raterostesonco.streamingservicessim.Banco será
+   el intermediario entre los Servicios y el src.main.com.raterostesonco.streamingservicessim.Cliente para que no se pierda ese encapsulamiento.
+   El src.main.com.raterostesonco.streamingservicessim.Banco debe de poder realizar los intentos de cobro al usuario correspondiente, y de la misma manera,
    reportarle al Servicio que hace la solicitud si el cobro fue exitoso o no.
    Implementa ligeramente el modelo Observer 
  */
@@ -20,10 +22,10 @@ public class Banco implements Notificador{
 
 
     /**
-       Elimina un Suscriptor del Banco
+       Elimina un Suscriptor del src.main.com.raterostesonco.streamingservicessim.Banco
     
        Este metodo no debería de ser implementado en el modelo actual, pues ningun cliente deja de ser parte
-       de la lista del Banco. Está aquí solamente como requisito para la interface que implementa Banco (Notificador)
+       de la lista del src.main.com.raterostesonco.streamingservicessim.Banco. Está aquí solamente como requisito para la interface que implementa src.main.com.raterostesonco.streamingservicessim.Banco (src.main.com.raterostesonco.streamingservicessim.Notificador)
      */
     @Override
     public void eliminarSuscriptor(Escuchador suscriptor) {
@@ -33,7 +35,7 @@ public class Banco implements Notificador{
     /**
        Agrega un suscriptor a la lista de Clientes del banco.
 
-       Este metodo debe de ser llamado desde el constructor de Cliente, pues toda instancia de Cliente debe pertenecer a la lista
+       Este metodo debe de ser llamado desde el constructor de src.main.com.raterostesonco.streamingservicessim.Cliente, pues toda instancia de src.main.com.raterostesonco.streamingservicessim.Cliente debe pertenecer a la lista
        de esta clase.
      */
     @Override
@@ -43,7 +45,7 @@ public class Banco implements Notificador{
     }
 
     /**
-       En realidad, tampoco usaremos este metodo de la interfaz, pues Banco no realiza avisos masivos a todos sus clientes, al menos
+       En realidad, tampoco usaremos este metodo de la interfaz, pues src.main.com.raterostesonco.streamingservicessim.Banco no realiza avisos masivos a todos sus clientes, al menos
        bajo el modelo actual.
      */
     @Override

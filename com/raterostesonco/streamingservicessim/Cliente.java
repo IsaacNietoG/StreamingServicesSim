@@ -1,9 +1,14 @@
+package src.main.com.raterostesonco.streamingservicessim;
+
+import src.main.com.raterostesonco.streamingservicessim.servicios.Servicio;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
-   La Clase Cliente de la cual se instanciarán todos los clientes de esta práctica.
+   La Clase src.main.com.raterostesonco.streamingservicessim.Cliente de la cual se instanciarán todos los clientes de esta práctica.
 
-   Posee varios métodos que nos permitirán realizar las interacciones necesarias entre el Cliente y el resto
+   Posee varios métodos que nos permitirán realizar las interacciones necesarias entre el src.main.com.raterostesonco.streamingservicessim.Cliente y el resto
    de los distintos actores de este proyecto. En principio, cuando lleguemos a trabajar en nuestro Uso, esta
    clase y las distintas clases de Servicios serán las únicas con las que vamos a interactuar.
  */
@@ -20,41 +25,41 @@ public class Cliente implements Escuchador{
 
 
     /**
-       Este metodo se utiliza para recibir la lista de planes posibles que tiene un Servicio.
+       Este metodo se utiliza para recibir la lista de src.main.com.raterostesonco.streamingservicessim.servicios.planes posibles que tiene un Servicio.
 
        De manera práctica, esto nos permite conocer la lista de opciones que puede tener el usuario para
        contratar una suscripción de ese servicio.
 
-       @param   servicio    El servicio del cual queremos obtener su lista de posibles planes.
+       @param   servicio    El servicio del cual queremos obtener su lista de posibles src.main.com.raterostesonco.streamingservicessim.servicios.planes.
      */
     public void pedirPlanes(Servicio servicio){
         List<Plan> planes = servicio.getPlanes();
         if (planes != null && !planes.isEmpty()) {
             System.out.println("Planes disponibles para el servicio " + servicio.getNombre() + ":");
-            for (Plan plan : planes) {
+            for (servicios.planes.Plan plan : planes) {
                 System.out.println(plan);
             }
         } else {
-            System.out.println("No hay planes disponibles para el servicio " + servicio.getNombre());
+            System.out.println("No hay src.main.com.raterostesonco.streamingservicessim.servicios.planes disponibles para el servicio " + servicio.getNombre());
         }
     }
 
     /**
-       Este metodo nos permite cancelar una suscripcion desde el lado del Cliente
+       Este metodo nos permite cancelar una suscripcion desde el lado del src.main.com.raterostesonco.streamingservicessim.Cliente
 
        Deberia llamar al metodo cancelar() interno que posee la clase Suscripción, la cual
        es la que hará todo el trabajo del lado del Servicio.
 
        @param   suscripcion    La suscripcion que desea cancelar el usuario.
      */
-    public void cancelarServicio(Suscripcion suscricipcion){
+    public void cancelarServicio(Suscripcion suscripcion){
         suscripcion.cancelar();
         suscripciones.remove(suscripcion);
         System.out.println("La suscripción ha sido cancelada: " + suscripcion);
     }
 
     /**
-       Descuenta el importe de la cuentaBancaria del Cliente.
+       Descuenta el importe de la cuentaBancaria del src.main.com.raterostesonco.streamingservicessim.Cliente.
 
        En la implementación actual, la unica forma en la que puede fracasar el pago de la transaccion
        es que no hayan fondos suficientes en la cuenta.
@@ -82,7 +87,7 @@ public class Cliente implements Escuchador{
     /**
        Cambia el plan de la suscripción del cliente.
 
-       Para esto, recurre al método interno cambiarPlanUsuario(Cliente, plan) que posee el Servicio,
+       Para esto, recurre al método interno cambiarPlanUsuario(src.main.com.raterostesonco.streamingservicessim.Cliente, plan) que posee el Servicio,
        internamente, este método solo debe realizar la solicitud con el plan apropiado.
 
        @param   servicio    El servicio de la suscripción a la cual se desea cambiar de plan.
@@ -99,7 +104,7 @@ public class Cliente implements Escuchador{
        Contrata una nueva Suscripción del Servicio designado, con el plan apropiado
 
        Llama al metodo inscribirUsuario(usuario, plan) del Servicio apropiado, el cual
-       deberá retornar una instancia de Suscripción que nosotros del lado del Cliente guardaremos
+       deberá retornar una instancia de Suscripción que nosotros del lado del src.main.com.raterostesonco.streamingservicessim.Cliente guardaremos
        en la ArrayList correspondiente.
 
        @param   servicio    El servicio del cual se desea contratar una suscripción
@@ -130,13 +135,13 @@ public class Cliente implements Escuchador{
     /**
        Recibe un mensaje de parte de alguno de los Sujetos en los que se encuentra listado el usuario.
 
-       Bajo esta implementación, existen dos Sujetos que pueden enviarle mensajes al Cliente, los cuales son:
+       Bajo esta implementación, existen dos Sujetos que pueden enviarle mensajes al src.main.com.raterostesonco.streamingservicessim.Cliente, los cuales son:
        - Servicios
-       - Banco
+       - src.main.com.raterostesonco.streamingservicessim.Banco
 
        En cualquiera de los dos casos, estos deben dar un mensajeString claro, que este método lo unico que debería
        de hacer es imprimir en consola. Pero, debido a que todos los Clientes comparten consola, mi propuesta de uso
-       sería anexar el nombre del Cliente que está recibiendo este mensaje.
+       sería anexar el nombre del src.main.com.raterostesonco.streamingservicessim.Cliente que está recibiendo este mensaje.
 
        @param   mensajeString    El mensaje que se imprimirá en pantalla
      */
