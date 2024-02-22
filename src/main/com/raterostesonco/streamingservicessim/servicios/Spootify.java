@@ -17,7 +17,8 @@ public class Spootify implements Servicio {
        correspondientes para este servicio
      */
     private Spootify(){
-        
+        recomendaciones.add("Recomendación 1");
+        recomendaciones.add("Recomendación 2");
     }
 
     /**
@@ -41,7 +42,8 @@ public class Spootify implements Servicio {
     @Override
     public void enviarRecomendacion() {
         // TODO Auto-generated method stub
-        
+         String mensaje = recomendaciones.get((int) (Math.random() * recomendaciones.size()));
+        notificar(mensaje);
     }
 
     /**
@@ -52,7 +54,9 @@ public class Spootify implements Servicio {
     @Override
     public void cobrarClientes() {
         // TODO Auto-generated method stub
-        
+         for(Suscripcion suscripcion : listaSuscripciones){
+            suscripcion.facturar();
+        }
     }
 
     /**
@@ -61,7 +65,7 @@ public class Spootify implements Servicio {
     @Override
     public List<List> darPlanes() {
         // TODO Auto-generated method stub
-            return null;
+             return List.of(PlanesSpootify.values());
     }
 
     /**
@@ -73,7 +77,12 @@ public class Spootify implements Servicio {
     @Override
     public Suscripcion inscribirUsuario(Cliente usuario, Plan plan) {
         // TODO Auto-generated method stub
-        
+        if(plan instanceof PlanesSpootify){
+            Suscripcion nuevaSuscripcion = new Suscripcion(usuario, this, plan);
+            listaSuscripciones.add(nuevaSuscripcion);
+            return nuevaSuscripcion;
+        }
+        return null;
     }
 
     /**
@@ -95,7 +104,7 @@ public class Spootify implements Servicio {
     @Override
     public void eliminarSuscriptor(Escuchador suscriptor) {
         // TODO Auto-generated method stub
-        
+         listaSuscripciones.removeIf(s -> s.getCliente().equals(suscriptor));
     }
 
     /**
@@ -118,6 +127,8 @@ public class Spootify implements Servicio {
     @Override
     public void notificar(String mensaje) {
         // TODO Auto-generated method stub
-        
+       for(Suscripcion suscripcion : listaSuscripciones){
+            suscripcion.getCliente().recibirMensaje(mensaje);
+        } 
     }
 }
