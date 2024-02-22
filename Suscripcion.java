@@ -41,7 +41,11 @@ public class Suscripcion {
                 plan       Plan de la suscripción
      */
     public Suscripcion(Cliente cliente, Servicio servicio, Plan plan){
-        
+        this.cliente = cliente;
+        this.servicio = servicio;
+        this.plan = plan;
+        this.mesesActivo = 0; // Inicialmente, la suscripción no ha estado activa ningún mes
+        this.suscripcionActiva = true;
     }
 
     /**
@@ -53,7 +57,7 @@ public class Suscripcion {
        @param   plan    El nuevo plan que pasará a componer a la Suscripción
      */
     public void cambioPlan(Plan plan){
-        
+        this.plan = plan;
     }
 
     /**
@@ -66,7 +70,9 @@ public class Suscripcion {
        3. Setear mesesActivo a 0
      */
     public void cancelar(){
-        
+      this.suscripcionActiva = false;
+        this.servicio.eliminarSuscriptor(this);
+        this.mesesActivo = 0;  
     }
 
     /**
@@ -77,27 +83,30 @@ public class Suscripcion {
        suscripción. Consultar Banco.
      */
     public void facturar(){
-        
+         boolean cobroExitoso = Banco.cobrarCliente(this.cliente, this.plan.calcularCosto()); 
+        if (!cobroExitoso) {
+            cancelar(); // Si el cobro falla, cancelar la suscripción
+        }
     }
 
     public Cliente darCliente(){
-        
+        return this.cliente;
     }
 
     public Servicio darServicio(){
-        
+        return this.servicio
     }
 
     public Plan darPlan(){
-        
+        return this.plan;
     }
 
     public boolean esSuscriptor(){
-        
+        returbn this.suscripcionActiva;
     }
 
     public int darMesesActivo(){
-        
+         return this.mesesActivo;
     }
 
 }
