@@ -1,8 +1,10 @@
+package src.main.com.raterostesonco.streamingservicessim;
+
 /**
    Interface para modelar el comportamiento básico que debe tener un Observer en nuestro patron.
 
    Esta es la parte Observer de nuestra implementación del patrón Observer, la parte sujeto es
-   Notificador 
+   src.main.com.raterostesonco.streamingservicessim.Notificador
  */
 public interface Escuchador {
 

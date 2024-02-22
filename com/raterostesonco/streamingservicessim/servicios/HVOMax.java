@@ -1,6 +1,9 @@
-package servicios;
+package src.main.com.raterostesonco.streamingservicessim.servicios;
 
-import planes.PlanesHVOMax;
+import src.main.com.raterostesonco.streamingservicessim.Cliente;
+import src.main.com.raterostesonco.streamingservicessim.Escuchador;
+import src.main.com.raterostesonco.streamingservicessim.Suscripcion;
+import src.main.com.raterostesonco.streamingservicessim.servicios.planes.PlanesHVOMax;
 import java.util.ArrayList;
 
 public class HVOMax implements Servicio {
@@ -48,7 +51,7 @@ public class HVOMax implements Servicio {
     /**
        Cobra masivamente a todos los clientes, debe ser activado "mensualmente" al igual que enviarRecomendacion
 
-       Utiliza el metodo Suscripcion.facturar para esto mismo.
+       Utiliza el metodo src.main.com.raterostesonco.streamingservicessim.Suscripcion.facturar para esto mismo.
      */
     @Override
     public void cobrarClientes() {
@@ -57,7 +60,7 @@ public class HVOMax implements Servicio {
     }
 
     /**
-       Retorna todos los planes posibles que se pueden contratar de este servicio.
+       Retorna todos los src.main.com.raterostesonco.streamingservicessim.servicios.planes posibles que se pueden contratar de este servicio.
 
        Particularmente para HVOMax, debemos de tener en mente que en realidad solamente tiene un plan. (Consultar Planes)
      */
@@ -68,8 +71,8 @@ public class HVOMax implements Servicio {
     }
 
     /**
-       Recibe un usuario que desea suscribir un nuevo plan del servicio y le retorna la Suscripcion correspondiente, de la misma
-       forma, este metodo agrega la Suscripcion creada a la lista interna del Servico (listaSuscripciones)
+       Recibe un usuario que desea suscribir un nuevo plan del servicio y le retorna la src.main.com.raterostesonco.streamingservicessim.Suscripcion correspondiente, de la misma
+       forma, este metodo agrega la src.main.com.raterostesonco.streamingservicessim.Suscripcion creada a la lista interna del Servico (listaSuscripciones)
 
        Deberia de verificar que el Plan recibido es correspondiente al Servicio.
 
@@ -85,7 +88,7 @@ public class HVOMax implements Servicio {
     /**
        Cambia el plan del Usuario
 
-       Particularmente en HVOMax, debemos verificar que el Cliente no pueda cambiarse al plan inicial cuando haya vencido el
+       Particularmente en HVOMax, debemos verificar que el src.main.com.raterostesonco.streamingservicessim.Cliente no pueda cambiarse al plan inicial cuando haya vencido el
        plazo correspondiente.
      */
     @Override
@@ -95,7 +98,7 @@ public class HVOMax implements Servicio {
     }
 
     /**
-       Elimina al Cliente de la lista interna del Servicio.
+       Elimina al src.main.com.raterostesonco.streamingservicessim.Cliente de la lista interna del Servicio.
 
        Este metodo es llamado desde la Suscripción correspondiente, que se cancela a sí misma, por lo que
        lo unico que debemos hacer en este metodo es eliminar el objeto Suscripción correspondiente de la lista
