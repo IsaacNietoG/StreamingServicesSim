@@ -38,8 +38,7 @@ public class Banco implements Notificador {
      * de la lista del Banco. Está aquí solamente como requisito para la interface que implementa Banco (Notificador)
      */
     @Override
-    public void eliminarSuscriptor(Escuchador suscriptor) {
-        listaCuentas.remove(suscriptor);
+    public void eliminarSuscriptor(Suscripcion suscriptor) {
     }
 
     /**

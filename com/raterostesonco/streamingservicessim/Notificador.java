@@ -8,7 +8,7 @@ package com.raterostesonco.streamingservicessim;
  */
 public interface Notificador {
 
-    void eliminarSuscriptor(Escuchador suscriptor);
+    void eliminarSuscriptor(Suscripcion suscriptor);
 
     void agregarSuscriptor(Escuchador suscriptor);
 
