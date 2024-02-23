@@ -83,17 +83,17 @@ public class Suscripcion {
      * De la misma forma, debe de manejar el caso en el que este cobro no puede ser exitoso y por lo tanto se debe de cancelar la
      * suscripción. Consultar Banco.
      */
-    public void facturar() {
+    public boolean facturar() {
         boolean cobroExitoso = Banco.getInstance().cobrarCliente(this.cliente, plan.getPrecio(), "Intentando cobrar el mes de "+this.servicio);
         if (!cobroExitoso) {
             this.cliente.recibirMensaje("Cobro no exitoso, suscripcion cancelada");
-            cancelar(); // Si el cobro falla, cancelar la suscripción
-            return;
+            return false;
         }
         this.cliente.recibirMensaje("Cobro exitoso");
         mesesActivo++;
         mesesTotales++;
         this.cliente.recibirMensaje(this.cliente.darNombre() + " llevas "+ this.mesesActivo + " meses usando " + this.servicio);
+        return true;
     }
 
     public Cliente darCliente() {

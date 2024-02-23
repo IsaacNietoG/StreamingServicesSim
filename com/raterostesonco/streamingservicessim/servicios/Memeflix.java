@@ -61,8 +61,14 @@ public class Memeflix implements Servicio {
      */
     @Override
     public void cobrarClientes() {
+        ArrayList<Suscripcion> eliminados = new ArrayList<>();
         for(Suscripcion cliente : listaSuscripciones){
-            cliente.facturar();
+            if(!cliente.facturar()){
+                eliminados.add(cliente);
+            }
+        }
+        for(Suscripcion remover : eliminados){
+            listaSuscripciones.remove(remover);
         }
         enviarRecomendacion();
     }
