@@ -8,12 +8,14 @@ import com.raterostesonco.streamingservicessim.servicios.planes.PlanesSpootify;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import java.util.Random;
 
 public class Spootify implements Servicio {
     PlanesSpootify planes; //Enum
-    ArrayList<String> recomendaciones;
-    ArrayList<Suscripcion> listaSuscripciones;
-    Spootify instance;
+    private ArrayList<String> recomendaciones;
+    private ArrayList<Suscripcion> listaSuscripciones;
+    static Spootify instance;
 
     /**
      * Constructor de la clase Spootify
@@ -34,7 +36,7 @@ public class Spootify implements Servicio {
      * <p>
      * Funciona simple, si no existe una instancia, la crea, y si existe, retorna la unica instancia que debe de existir.
      */
-    public Spootify getInstance() {
+    public static Spootify getInstance() {
         if (instance == null) {
             instance = new Spootify();
         }
@@ -48,7 +50,6 @@ public class Spootify implements Servicio {
      */
     @Override
     public void enviarRecomendacion() {
-        // TODO Auto-generated method stub
         notificar(recomendaciones.get(new Random().nextInt(12)));
     }
 
@@ -59,10 +60,10 @@ public class Spootify implements Servicio {
      */
     @Override
     public void cobrarClientes() {
-        // TODO Auto-generated method stub
         for(Suscripcion cliente : listaSuscripciones){
             cliente.facturar();
         }
+        enviarRecomendacion();
     }
 
     /**
@@ -86,18 +87,24 @@ public class Spootify implements Servicio {
     @Override
     public Suscripcion inscribirUsuario(Cliente usuario, Plan plan) {
         ArrayList<Suscripcion> suscripcionesUsuario = usuario.darSuscripciones();
-        plan = PlanesSpootify.INICIAL;
-        for(Suscripcion suscripcion : suscripcionesUsuario){
-            if(suscripcion.darServicio() == this && suscripcion.darMesesTotales() >= 3){
-                usuario.recibirMensaje("Tus meses gratuitos de Spootify caducaron, migrando a plan normal");
-                plan = PlanesSpootify.NORMAL;
+        Suscripcion previa = null;
+        // Buscando suscripcion previa
+        for (Suscripcion suscripcion : suscripcionesUsuario) {
+            if (suscripcion.darServicio().equals(this)) {
+                previa = suscripcion;
                 break;
             }
+        }
+
+        // Si existe una suscripcion previa, retornar esa misma y volverla a agregar.
+        if (previa != null) {
+            listaSuscripciones.add(previa);
+            suscripcionesUsuario.remove(previa);
+            return previa;
         }
         Suscripcion retornar = new Suscripcion(usuario, this, plan);
         listaSuscripciones.add(retornar);
         return retornar;
-
     }
 
     /**
@@ -112,18 +119,11 @@ public class Spootify implements Servicio {
                 break;
             }
         }
-        if(suscripcionUsuario == null){
+        if (suscripcionUsuario == null) {
             cliente.recibirMensaje("Suscripcion a Spootify no encontrada");
             return;
         }
-        if(plan == PlanesSpootify.INICIAL){
-            if(suscripcionUsuario.darMesesTotales() > 3){
-                cliente.recibirMensaje("No puedes cambiarte a este plan, tu prueba gratuita ha vencido");
-                return;
-            }
-        }
         suscripcionUsuario.cambioPlan(plan);
-
     }
 
     /**

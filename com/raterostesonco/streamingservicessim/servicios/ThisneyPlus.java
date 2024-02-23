@@ -8,6 +8,8 @@ import com.raterostesonco.streamingservicessim.servicios.planes.PlanesThisneyPlu
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Clase que modela el comportamiento del servicio ThisneyPlus
@@ -20,9 +22,9 @@ import java.util.List;
 public class ThisneyPlus implements Servicio {
 
     PlanesThisneyPlus planes; //Enum
-    ArrayList<String> recomendaciones;
-    ArrayList<Suscripcion> listaSuscripciones;
-    ThisneyPlus instance;
+    private ArrayList<String> recomendaciones;
+    private ArrayList<Suscripcion> listaSuscripciones;
+    static ThisneyPlus instance;
 
     /**
      * Constructor de la clase src.main.com.raterostesonco.streamingservicessim.servicios.ThisneyPlus
@@ -31,20 +33,19 @@ public class ThisneyPlus implements Servicio {
      * Debemos de crear todos los atributos correspondientes, particularmente, aqui es donde debemos de colocar las recomendaciones
      * correspondientes para este servicio
      */
-<<<<<<< HEAD
-    private ThisneyPlus(){
-        recomendaciones = new ArrayList<>(Arrays.asList("La sirenita", "Wanda Vision","Loki",
-                                                        "La cenicienta", "What if?", "ELEMENTOS", "CARS", "Phineas and Ferb", "AVATAR", "AVENGERS",
-                                                        "RED", "MANDALORIAN"));
+    private ThisneyPlus() {
+        recomendaciones = new ArrayList<>(Arrays.asList("La sirenita", "Wanda Vision", "Loki",
+                "La cenicienta", "What if?", "ELEMENTOS", "CARS", "Phineas and Ferb", "AVATAR", "AVENGERS",
+                "RED", "MANDALORIAN"));
         listaSuscripciones = new ArrayList<>();
-
+    }
 
     /**
      * Este es el metodo al que debemos de llamar desde el exterior para referirnos a src.main.com.raterostesonco.streamingservicessim.servicios.ThisneyPlus
      * <p>
      * Funciona simple, si no existe una instancia, la crea, y si existe, retorna la unica instancia que debe de existir.
      */
-    public ThisneyPlus getInstance() {
+    public static ThisneyPlus getInstance() {
         if (instance == null) {
             instance = new ThisneyPlus();
         }
@@ -59,11 +60,7 @@ public class ThisneyPlus implements Servicio {
     @Override
     public void enviarRecomendacion() {
         notificar(recomendaciones.get(new Random().nextInt(12)));
-        }  
         
-=======
-
->>>>>>> a1f26e57b0568e52701d261e246bd247e57f5083
     }
 
     /**
@@ -73,14 +70,14 @@ public class ThisneyPlus implements Servicio {
      */
     @Override
     public void cobrarClientes() {
-        // TODO Auto-generated method stub
-<<<<<<< HEAD
-        for (Suscripcion suscripcion : listaSuscripciones) {
-            suscripcion.facturar();
+        for (Suscripcion cliente : listaSuscripciones) {
+            cliente.facturar();
+            if (cliente.darMesesTotales() > 3) {
+                cliente.darCliente().recibirMensaje("Tu prueba gratuita ha vencido, te cambiaremos al plan normal");
+                cliente.cambioPlan(PlanesThisneyPlus.NORMAL);
+            }
         }
-=======
-
->>>>>>> a1f26e57b0568e52701d261e246bd247e57f5083
+        enviarRecomendacion();
     }
 
     /**
@@ -108,15 +105,35 @@ public class ThisneyPlus implements Servicio {
      */
     @Override
     public Suscripcion inscribirUsuario(Cliente usuario, Plan plan) {
-        // TODO Auto-generated method stub
-<<<<<<< HEAD
-        Suscripcion nuevaSuscripcion = new Suscripcion(usuario, this, plan);
-        listaSuscripciones.add(nuevaSuscripcion);
-        usuario.agregarSuscripcion(nuevaSuscripcion);
-        return nuevaSuscripcion;
-=======
-        return null;
->>>>>>> a1f26e57b0568e52701d261e246bd247e57f5083
+        ArrayList<Suscripcion> suscripcionesUsuario = usuario.darSuscripciones();
+        plan = PlanesThisneyPlus.INICIAL;
+        Suscripcion anterior = null;
+        //Buscar si hay una suscripcion previa en el usuario.
+        for(Suscripcion suscripcion : suscripcionesUsuario){
+            if(suscripcion.darServicio() == this){
+                usuario.recibirMensaje("Bienvenido de vuelta a HVOMax, "+ suscripcion.darCliente().darNombre());
+                anterior = suscripcion;
+                break;
+            }
+        }
+        //Caso en el que no se encontró una suscripcion previa, se da el plan Inicial
+        if(anterior == null){
+            usuario.recibirMensaje("Bienvenido a Thisney Plus, " + usuario.darNombre());
+            Suscripcion retornar = new Suscripcion(usuario, this, plan);
+            listaSuscripciones.add(retornar);
+            return retornar;
+        }
+
+        //Caso en el que se encontró una suscripción previa, y además tenía más de 3 meses de antiguedad.
+        if(anterior.darMesesTotales() > 3){
+            usuario.recibirMensaje("Tu prueba gratuita de HVOMax ha caducado, inscribiendote a plan normal");
+            anterior.cambioPlan(PlanesThisneyPlus.NORMAL);
+
+        }
+        //Final de ejecución, si se encontró una suscripción previa, se elimina de la lista pero se retorna otra vez.
+        listaSuscripciones.add(anterior);
+        suscripcionesUsuario.remove(anterior);
+        return anterior;
     }
 
     /**
@@ -127,7 +144,6 @@ public class ThisneyPlus implements Servicio {
      */
     @Override
     public void cambiarPlanUsuario(Cliente cliente, Plan plan) {
-        // TODO Auto-generated method stub
     Suscripcion suscripcionUsuario = null;
         for (Suscripcion suscripcion : this.listaSuscripciones) {
             if (suscripcion.darCliente().equals(cliente)) {
@@ -148,7 +164,7 @@ public class ThisneyPlus implements Servicio {
         suscripcionUsuario.cambioPlan(plan);
 
     }
-    }
+    
 
     /**
      * Elimina al src.main.com.raterostesonco.streamingservicessim.Cliente de la lista interna del Servicio.
