@@ -1,4 +1,4 @@
-package servicios.planes;
+package com.raterostesonco.streamingservicessim.servicios.planes;
 
 public enum PlanesSpootify implements Plan {
     NORMAL(0), PREMIUM(80);
