@@ -9,8 +9,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Logger {
+
+    private static final String LOG_FILE = "logs/%s.txt".formatted(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
     private static final SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    private static final String LOG_FILE = "logs/%s.txt".formatted(formatoFecha.format(new Date()));
 
     public static void log(Object instancia, String mensaje) {
 
