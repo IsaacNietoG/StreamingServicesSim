@@ -63,7 +63,12 @@ public class HVOMax implements Servicio {
     public void cobrarClientes() {
         for(Suscripcion cliente : listaSuscripciones){
             cliente.facturar();
+            if(cliente.darMesesTotales() >3){
+                cliente.darCliente().recibirMensaje("Tu prueba gratuita ha vencido, te cambiaremos al plan normal");
+                cliente.cambioPlan(PlanesHVOMax.NORMAL);
+            }
         }
+        enviarRecomendacion();
     }
 
     /**
@@ -93,16 +98,34 @@ public class HVOMax implements Servicio {
     public Suscripcion inscribirUsuario(Cliente usuario, Plan plan) {
         ArrayList<Suscripcion> suscripcionesUsuario = usuario.darSuscripciones();
         plan = PlanesHVOMax.INICIAL;
+        Suscripcion anterior = null;
+        //Buscar si hay una suscripcion previa en el usuario.
         for(Suscripcion suscripcion : suscripcionesUsuario){
-            if(suscripcion.darServicio() == this && suscripcion.darMesesTotales() >= 3){
-                usuario.recibirMensaje("Tus meses gratuitos de HVOMax caducaron, migrando a plan normal");
-                plan = PlanesHVOMax.NORMAL;
+            if(suscripcion.darServicio() == this){
+                usuario.recibirMensaje("Bienvenido de vuelta a HVOMax, "+ suscripcion.darCliente().darNombre());
+                anterior = suscripcion;
                 break;
             }
         }
-        Suscripcion retornar = new Suscripcion(usuario, this, plan);
-        listaSuscripciones.add(retornar);
-        return retornar;
+        //Caso en el que no se encontró una suscripcion previa, se da el plan Inicial
+        if(anterior == null){
+            usuario.recibirMensaje("Bienvenido a HVOMax, " + usuario.darNombre());
+            Suscripcion retornar = new Suscripcion(usuario, this, plan);
+            listaSuscripciones.add(retornar);
+            return retornar;
+        }
+
+        //Caso en el que se encontró una suscripción previa, y además tenía más de 3 meses de antiguedad.
+        if(anterior.darMesesTotales() > 3){
+            usuario.recibirMensaje("Tu prueba gratuita de HVOMax ha caducado, inscribiendote a plan normal");
+            anterior.cambioPlan(PlanesHVOMax.NORMAL);
+
+        }
+        //Final de ejecución, si se encontró una suscripción previa, se elimina de la lista pero se retorna otra vez.
+        listaSuscripciones.add(anterior);
+        suscripcionesUsuario.remove(anterior);
+        return anterior;
+
 
     }
 
@@ -115,16 +138,22 @@ public class HVOMax implements Servicio {
     @Override
     public void cambiarPlanUsuario(Cliente cliente, Plan plan) {
         Suscripcion suscripcionUsuario = null;
+
+        //Busca la suscripcion del usuario en la lista
         for (Suscripcion suscripcion : this.listaSuscripciones) {
             if (suscripcion.darCliente().equals(cliente)) {
                 suscripcionUsuario = suscripcion;
                 break;
             }
         }
+
+        //Caso donde no se encuentra la susscripcion
         if(suscripcionUsuario == null){
             cliente.recibirMensaje("Suscripcion a HVOMax no encontrada");
             return;
         }
+
+        //Si se intenta cambiar al plan gratuito una vez vencida la prueba
         if(plan == PlanesHVOMax.INICIAL){
             if(suscripcionUsuario.darMesesTotales() > 3){
                 cliente.recibirMensaje("No puedes cambiarte a este plan, tu prueba gratuita ha vencido");
@@ -144,6 +173,7 @@ public class HVOMax implements Servicio {
      */
     @Override
     public void eliminarSuscriptor(Escuchador suscriptor) {
+        //Se busca la suscripcion y se elimina
         for(Suscripcion suscripcion : listaSuscripciones){
             if(suscripcion.darCliente().equals(suscriptor)){
                 listaSuscripciones.remove(suscripcion);
@@ -174,5 +204,9 @@ public class HVOMax implements Servicio {
             suscriptor.darCliente().recibirMensaje(mensaje);
         }
 
+    }
+
+    public String toString(){
+        return getNombre();
     }
 }

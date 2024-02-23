@@ -2,6 +2,7 @@ package com.raterostesonco.streamingservicessim;
 
 import com.raterostesonco.streamingservicessim.servicios.Servicio;
 import com.raterostesonco.streamingservicessim.servicios.planes.Plan;
+import com.raterostesonco.streamingservicessim.utilidades.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +35,15 @@ public class Cliente implements Escuchador {
      * @param servicio El servicio del cual queremos obtener su lista de posibles planes.
      */
     public void pedirPlanes(Servicio servicio) {
-        // TODO : Esto está mal implementado, por lo menos con como el programa está estructurado actualmente, checar
-//        List<Plan> planes = servicio.getPlanes();
-//        if (planes != null && !planes.isEmpty()) {
-//            System.out.println("Planes disponibles para el servicio " + servicio.getNombre() + ":");
-//            for (servicio.planes.Plan plan : planes) {
-//                System.out.println(plan);
-//            }
-//        } else {
-//            System.out.println("No hay planes disponibles para el servicio " + servicio.getNombre());
-//        }
+        List<Plan> planes = servicio.darPlanes();
+        if (planes != null && !planes.isEmpty()) {
+            System.out.println("Planes disponibles para el servicio " + servicio.getNombre() + ":");
+            for (Plan plan : planes) {
+                System.out.println(plan);
+            }
+        } else {
+            System.out.println("No hay planes disponibles para el servicio " + servicio.getNombre());
+        }
     }
 
     /**
@@ -56,8 +56,7 @@ public class Cliente implements Escuchador {
      */
     public void cancelarServicio(Suscripcion suscripcion) {
         suscripcion.cancelar();
-        suscripciones.remove(suscripcion);
-        System.out.println("La suscripción ha sido cancelada: " + suscripcion);
+        System.out.println("La suscripción a " + suscripcion.darServicio()+ " ha sido cancelada.");
     }
 
     /**
@@ -76,10 +75,8 @@ public class Cliente implements Escuchador {
     public boolean recibirCobro(double importe) {
         if (cuentaBanco >= importe) {
             cuentaBanco -= importe;
-            System.out.println("Cobro realizado exitosamente. Importe: " + importe);
             return true;
         } else {
-            System.out.println("Fallo en el cobro. Fondos insuficientes.");
             return false;
         }
     }
@@ -96,7 +93,6 @@ public class Cliente implements Escuchador {
      */
     public void cambiarPlan(Servicio servicio, Plan plan) {
         servicio.cambiarPlanUsuario(this, plan);
-        System.out.println("Plan cambiado a: " + plan + " para el servicio: " + servicio.getNombre());
     }
 
 
@@ -114,9 +110,7 @@ public class Cliente implements Escuchador {
         Suscripcion nuevaSuscripcion = servicio.inscribirUsuario(this, plan);
         if (nuevaSuscripcion != null) {
             suscripciones.add(nuevaSuscripcion);
-            System.out.println("Nueva suscripción agregada: " + nuevaSuscripcion);
         } else {
-            System.out.println("No se pudo agregar la nueva suscripción para el servicio: " + servicio.getNombre());
         }
     }
 
@@ -146,7 +140,7 @@ public class Cliente implements Escuchador {
      * @param mensajeString El mensaje que se imprimirá en pantalla
      */
     public void recibirMensaje(String mensajeString) {
-        System.out.println("Mensaje para " + nombre + ": " + mensajeString);
+        Logger.log(this, mensajeString);
     }
 }
 
