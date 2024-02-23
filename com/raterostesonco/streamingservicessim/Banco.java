@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class Banco implements Notificador {
 
+    private final String PREFIJO = "BANCO";
+
     private static Banco instance;
 
     ArrayList<Cliente> listaCuentas;
@@ -30,20 +32,20 @@ public class Banco implements Notificador {
 
 
     /**
-     * Elimina un Suscriptor del src.main.com.raterostesonco.streamingservicessim.Banco
+     * Elimina un Suscriptor del Banco
      * <p>
      * Este metodo no debería de ser implementado en el modelo actual, pues ningun cliente deja de ser parte
-     * de la lista del src.main.com.raterostesonco.streamingservicessim.Banco. Está aquí solamente como requisito para la interface que implementa src.main.com.raterostesonco.streamingservicessim.Banco (src.main.com.raterostesonco.streamingservicessim.Notificador)
+     * de la lista del Banco. Está aquí solamente como requisito para la interface que implementa Banco (Notificador)
      */
     @Override
     public void eliminarSuscriptor(Escuchador suscriptor) {
-
+        listaCuentas.remove(suscriptor);
     }
 
     /**
      * Agrega un suscriptor a la lista de Clientes del banco.
      * <p>
-     * Este metodo debe de ser llamado desde el constructor de src.main.com.raterostesonco.streamingservicessim.Cliente, pues toda instancia de src.main.com.raterostesonco.streamingservicessim.Cliente debe pertenecer a la lista
+     * Este metodo debe de ser llamado desde el constructor de Cliente, pues toda instancia de Cliente debe pertenecer a la lista
      * de esta clase.
      */
     @Override
@@ -53,11 +55,12 @@ public class Banco implements Notificador {
     }
 
     /**
-     * En realidad, tampoco usaremos este metodo de la interfaz, pues src.main.com.raterostesonco.streamingservicessim.Banco no realiza avisos masivos a todos sus clientes, al menos
+     * En realidad, tampoco usaremos este metodo de la interfaz, pues Banco no realiza avisos masivos a todos sus clientes, al menos
      * bajo el modelo actual.
      */
     @Override
     public void notificar(String mensajeString) {
+        System.out.println("[%s] %s".formatted(PREFIJO, mensajeString));
     }
 
 
