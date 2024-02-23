@@ -28,7 +28,6 @@ public class Suscripcion {
     private int mesesActivo;
     private int mesesTotales;
     private Plan plan;
-    private boolean suscripcionActiva;
 
     /**
      * El constructor de la clase Suscripcion, este recibe los datos necesarios para crear
@@ -48,7 +47,6 @@ public class Suscripcion {
         this.servicio = servicio;
         this.plan = plan;
         this.mesesActivo = 0; // Inicialmente, la suscripción no ha estado activa ningún mes
-        this.suscripcionActiva = true;
     }
 
     /**
@@ -60,6 +58,7 @@ public class Suscripcion {
      * @param plan El nuevo plan que pasará a componer a la Suscripción
      */
     public void cambioPlan(Plan plan) {
+        this.cliente.recibirMensaje(this.servicio+": Plan cambiado a: " + plan);
         this.plan = plan;
     }
 
@@ -68,15 +67,13 @@ public class Suscripcion {
      * <p>
      * Debe de ser el método que es llamado desde el lado del Cliente y es el que realiza todas las acciones necesarias para desactivar
      * un plan. Esto es:
-     * 1, Cambiar su variable interna de suscripcionActiva a false
-     * 2. Llamar a eliminarSuscriptor del Servicio correspondiente.
-     * 3. Setear mesesActivo a 0
+     * 1. Llamar a eliminarSuscriptor del Servicio correspondiente.
+     * 2. Setear mesesActivo a 0
      */
     public void cancelar() {
-        // TODO: Mala implementación
-        this.suscripcionActiva = false;
         this.servicio.eliminarSuscriptor(cliente);
         this.mesesActivo = 0;
+        this.cliente.recibirMensaje(this.servicio + ": Lamentamos que dejes el servicio, "+ this.cliente.darNombre());
     }
 
     /**
@@ -87,11 +84,16 @@ public class Suscripcion {
      * suscripción. Consultar Banco.
      */
     public void facturar() {
-        // TODO: Mala implementación
-        boolean cobroExitoso = Banco.getInstance().cobrarCliente(this.cliente, 2, "");
+        boolean cobroExitoso = Banco.getInstance().cobrarCliente(this.cliente, plan.getPrecio(), "Intentando cobrar el mes de "+this.servicio);
         if (!cobroExitoso) {
+            this.cliente.recibirMensaje("Cobro no exitoso, suscripcion cancelada");
             cancelar(); // Si el cobro falla, cancelar la suscripción
+            return;
         }
+        this.cliente.recibirMensaje("Cobro exitoso");
+        mesesActivo++;
+        mesesTotales++;
+        this.cliente.recibirMensaje(this.cliente.darNombre() + " llevas "+ this.mesesActivo + " meses usando " + this.servicio);
     }
 
     public Cliente darCliente() {
@@ -106,9 +108,6 @@ public class Suscripcion {
         return this.plan;
     }
 
-    public boolean esSuscriptor() {
-        return this.suscripcionActiva;
-    }
 
     public int darMesesActivo() {
         return this.mesesActivo;
