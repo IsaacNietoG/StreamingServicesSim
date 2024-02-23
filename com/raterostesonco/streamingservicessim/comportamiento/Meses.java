@@ -20,7 +20,7 @@ public enum Meses {
         contratarTodo(bob);
 
         // Cesar
-        cesar.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.NORMAL);
+        cesar.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.INICIAL);
         cesar.contratarServicio(HVOMax.getInstance(), PlanesHVOMax.NORMAL);
 
         // Diego
@@ -33,7 +33,7 @@ public enum Meses {
         erika.contratarServicio(Spootify.getInstance(), PlanesSpootify.NORMAL);
 
         // Fausto
-        fausto.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.NORMAL);
+        fausto.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.INICIAL);
         fausto.contratarServicio(HVOMax.getInstance(), PlanesHVOMax.NORMAL);
 
     }),
@@ -49,7 +49,7 @@ public enum Meses {
 
         // Erika
         cancelarServicio(erika, HVOMax.getInstance());
-        erika.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.NORMAL);
+        erika.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.INICIAL);
 
         // Fausto
         cancelarServicio(fausto, ThisneyPlus.getInstance());
@@ -68,13 +68,13 @@ public enum Meses {
 
     QUINTO(() -> {
         // Fausto
-        fausto.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.NORMAL);
+        fausto.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.INICIAL);
         fausto.contratarServicio(HVOMax.getInstance(), PlanesHVOMax.NORMAL);
     }),
 
     SEXTO(() -> {
         // Diego
-        diego.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.NORMAL);
+        diego.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.INICIAL);
 
         // Erika
         cancelarTodo(erika);
@@ -106,7 +106,7 @@ public enum Meses {
         // Erika
         erika.contratarServicio(Momazon.getInstance(), PlanesMomazon.PREMIUM);
         erika.contratarServicio(HVOMax.getInstance(), PlanesHVOMax.NORMAL);
-        erika.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.PREMIUM);
+        erika.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.NORMAL);
     });
 
     // Aquí se podrían seguir agregando meses de ser necesario, y automaticamente se simularían
@@ -151,6 +151,6 @@ public enum Meses {
         cliente.contratarServicio(Momazon.getInstance(), PlanesMomazon.PREMIUM);
         cliente.contratarServicio(Spootify.getInstance(), PlanesSpootify.PREMIUM);
         cliente.contratarServicio(HVOMax.getInstance(), PlanesHVOMax.NORMAL);
-        cliente.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.PREMIUM);
+        cliente.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.NORMAL);
     }
 }
