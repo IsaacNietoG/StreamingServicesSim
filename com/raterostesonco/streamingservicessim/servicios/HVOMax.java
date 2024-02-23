@@ -14,9 +14,9 @@ import java.util.Random;
 public class HVOMax implements Servicio {
 
     PlanesHVOMax planes; //Enum
-    ArrayList<String> recomendaciones;
-    ArrayList<Suscripcion> listaSuscripciones;
-    HVOMax instance;
+    private ArrayList<String> recomendaciones;
+    private ArrayList<Suscripcion> listaSuscripciones;
+    static HVOMax instance;
 
     /**
      * Constructor de la clase HVOMax
@@ -37,7 +37,7 @@ public class HVOMax implements Servicio {
      * <p>
      * Funciona simple, si no existe una instancia, la crea, y si existe, retorna la unica instancia que debe de existir.
      */
-    public HVOMax getInstance() {
+    public static HVOMax getInstance() {
         if (instance == null) {
             instance = new HVOMax();
         }
@@ -51,7 +51,7 @@ public class HVOMax implements Servicio {
      */
     @Override
     public void enviarRecomendacion() {
-        notificar(recomendaciones.get(new Random().nextInt(12)));
+        notificar("Recomendacion mensual de " + this + ": " + recomendaciones.get(new Random().nextInt(12)));
     }
 
     /**
@@ -63,7 +63,7 @@ public class HVOMax implements Servicio {
     public void cobrarClientes() {
         for(Suscripcion cliente : listaSuscripciones){
             cliente.facturar();
-            if(cliente.darMesesTotales() >3){
+            if(cliente.darMesesTotales() >3 && cliente.darPlan().equals(PlanesHVOMax.INICIAL)){
                 cliente.darCliente().recibirMensaje("Tu prueba gratuita ha vencido, te cambiaremos al plan normal");
                 cliente.cambioPlan(PlanesHVOMax.NORMAL);
             }

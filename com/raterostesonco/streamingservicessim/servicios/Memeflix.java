@@ -51,7 +51,7 @@ public class Memeflix implements Servicio {
      */
     @Override
     public void enviarRecomendacion() {
-        notificar(recomendaciones.get(new Random().nextInt(12)));
+        notificar("Recomendacion mensual de " + this + ": " + recomendaciones.get(new Random().nextInt(12)));
     }
 
     /**
@@ -166,5 +166,9 @@ public class Memeflix implements Servicio {
             suscriptor.darCliente().recibirMensaje(mensaje);
         }
 
+    }
+
+    public String toString() {
+        return getNombre();
     }
 }
