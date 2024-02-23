@@ -33,10 +33,10 @@ public class ThisneyPlus implements Servicio {
      */
 <<<<<<< HEAD
     private ThisneyPlus(){
-        recomendaciones = new ArrayList<>();
+        recomendaciones = new ArrayList<>(Arrays.asList("La sirenita", "Wanda Vision","Loki",
+                                                        "La cenicienta", "What if?", "ELEMENTOS", "CARS", "Phineas and Ferb", "AVATAR", "AVENGERS",
+                                                        "RED", "MANDALORIAN"));
         listaSuscripciones = new ArrayList<>();
-        recomendaciones.add("Recomendación 1");
-        recomendaciones.add("Recomendación 2");
 
 
     /**
@@ -58,12 +58,7 @@ public class ThisneyPlus implements Servicio {
      */
     @Override
     public void enviarRecomendacion() {
-        // TODO Auto-generated method stub
-<<<<<<< HEAD
-       Random rnd = new Random();
-        String recomendacion = recomendaciones.get(rnd.nextInt(recomendaciones.size()));
-        for (Suscripcion suscripcion : listaSuscripciones) {
-            suscripcion.getCliente().recibirMensaje("ThisneyPlus recomienda: " + recomendacion);
+        notificar(recomendaciones.get(new Random().nextInt(12)));
         }  
         
 =======
@@ -95,15 +90,11 @@ public class ThisneyPlus implements Servicio {
      */
     @Override
     public List<Plan> darPlanes() {
-        // TODO Auto-generated method stub
-<<<<<<< HEAD
-       List<Plan> planes = new ArrayList<>();
-        planes.add(PlanesThisneyPlus.NORMAL);
-        planes.add(PlanesThisneyPlus.PREMIUM);
-        return planes;
-=======
-        return null;
->>>>>>> a1f26e57b0568e52701d261e246bd247e57f5083
+       ArrayList<Plan> listaPlanes = new ArrayList<>();
+        for(PlanesThisneyPlus plan : planes.values()){
+            listaPlanes.add(plan);
+        }
+        return listaPlanes;
     }
 
     /**
@@ -137,7 +128,26 @@ public class ThisneyPlus implements Servicio {
     @Override
     public void cambiarPlanUsuario(Cliente cliente, Plan plan) {
         // TODO Auto-generated method stub
+    Suscripcion suscripcionUsuario = null;
+        for (Suscripcion suscripcion : this.listaSuscripciones) {
+            if (suscripcion.darCliente().equals(cliente)) {
+                suscripcionUsuario = suscripcion;
+                break;
+            }
+        }
+        if(suscripcionUsuario == null){
+            cliente.recibirMensaje("Suscripcion a HVOMax no encontrada");
+            return;
+        }
+        if(plan == PlanesThisneyPlus.INICIAL){
+            if(suscripcionUsuario.darMesesTotales() > 3){
+                cliente.recibirMensaje("No puedes cambiarte a este plan, tu prueba gratuita ha vencido");
+                return;
+            }
+        }
+        suscripcionUsuario.cambioPlan(plan);
 
+    }
     }
 
     /**
@@ -149,12 +159,13 @@ public class ThisneyPlus implements Servicio {
      */
     @Override
     public void eliminarSuscriptor(Escuchador suscriptor) {
-        // TODO Auto-generated method stub
-<<<<<<< HEAD
-        listaSuscripciones.removeIf(s -> s.getCliente().equals(suscriptor));
-=======
-
->>>>>>> a1f26e57b0568e52701d261e246bd247e57f5083
+  
+  for(Suscripcion suscripcion : listaSuscripciones){
+            if(suscripcion.darCliente().equals(suscriptor)){
+                listaSuscripciones.remove(suscripcion);
+                return;
+            }
+        }
     }
 
     /**
@@ -165,8 +176,6 @@ public class ThisneyPlus implements Servicio {
      */
     @Override
     public void agregarSuscriptor(Escuchador suscriptor) {
-        // TODO Auto-generated method stub
-
     }
 
     /**
@@ -176,13 +185,8 @@ public class ThisneyPlus implements Servicio {
      */
     @Override
     public void notificar(String mensaje) {
-        // TODO Auto-generated method stub
-<<<<<<< HEAD
-        for (Suscripcion suscripcion : listaSuscripciones) {
-            suscripcion.getCliente().recibirMensaje(mensaje);
+        for(Suscripcion suscriptor : listaSuscripciones){
+            suscriptor.darCliente().recibirMensaje(mensaje);
         }
-=======
-
->>>>>>> a1f26e57b0568e52701d261e246bd247e57f5083
     }
 }

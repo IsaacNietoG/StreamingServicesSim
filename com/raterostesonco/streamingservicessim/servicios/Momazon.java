@@ -23,7 +23,10 @@ public class Momazon implements Servicio {
      * correspondientes para este servicio
      */
     private Momazon() {
-
+    recomendaciones = new ArrayList<>(Arrays.asList("GRISELDA", "A dos metros de ti",
+                                                        "Control Z", "¿Guardarìas un secreto?", "La ley y el Orden", "Siempre el mismo dia", "PREPARADAS, LISTAS ¡AMOR!", "El turista", "Elite",
+                                                        "SEXO/VIDA", "Club de cuervos"));
+        listaSuscripciones = new ArrayList<>();
     }
 
     /**
@@ -45,8 +48,7 @@ public class Momazon implements Servicio {
      */
     @Override
     public void enviarRecomendacion() {
-        // TODO Auto-generated method stub
-
+        notificar(recomendaciones.get(new Random().nextInt(12)));
     }
 
     /**
@@ -56,8 +58,10 @@ public class Momazon implements Servicio {
      */
     @Override
     public void cobrarClientes() {
-        // TODO Auto-generated method stub
-
+        
+    for(Suscripcion cliente : listaSuscripciones){
+            cliente.facturar();
+        }
     }
 
     /**
@@ -65,8 +69,11 @@ public class Momazon implements Servicio {
      */
     @Override
     public List<Plan> darPlanes() {
-        // TODO Auto-generated method stub
-        return null;
+    ArrayList<Plan> listaPlanes = new ArrayList<>();
+        for(PlanesMomazon plan : planes.values()){
+            listaPlanes.add(plan);
+        }
+        return listaPlanes;        
     }
 
     /**
@@ -77,8 +84,19 @@ public class Momazon implements Servicio {
      */
     @Override
     public Suscripcion inscribirUsuario(Cliente usuario, Plan plan) {
-        // TODO Auto-generated method stub
-        return null;
+      ArrayList<Suscripcion> suscripcionesUsuario = usuario.darSuscripciones();
+        plan = PlanesMomazon.INICIAL;
+        for(Suscripcion suscripcion : suscripcionesUsuario){
+            if(suscripcion.darServicio() == this && suscripcion.darMesesTotales() >= 3){
+                usuario.recibirMensaje("Tus meses gratuitos de Momazon caducaron, migrando a plan normal");
+                plan = PlanesMomazon.NORMAL;
+                break;
+            }
+        }
+        Suscripcion retornar = new Suscripcion(usuario, this, plan);
+        listaSuscripciones.add(retornar);
+        return retornar;
+
     }
 
     /**
@@ -87,7 +105,24 @@ public class Momazon implements Servicio {
     @Override
     public void cambiarPlanUsuario(Cliente cliente, Plan plan) {
         // TODO Auto-generated method stub
-
+    Suscripcion suscripcionUsuario = null;
+        for (Suscripcion suscripcion : this.listaSuscripciones) {
+            if (suscripcion.darCliente().equals(cliente)) {
+                suscripcionUsuario = suscripcion;
+                break;
+            }
+        }
+        if(suscripcionUsuario == null){
+            cliente.recibirMensaje("Suscripcion a Momazon no encontrada");
+            return;
+        }
+        if(plan == PlanesMomazon.INICIAL){
+            if(suscripcionUsuario.darMesesTotales() > 3){
+                cliente.recibirMensaje("No puedes cambiarte a este plan, tu prueba gratuita ha vencido");
+                return;
+            }
+        }
+        suscripcionUsuario.cambioPlan(plan);
     }
 
     /**
@@ -99,7 +134,11 @@ public class Momazon implements Servicio {
      */
     @Override
     public void eliminarSuscriptor(Escuchador suscriptor) {
-        // TODO Auto-generated method stub
+        for(Suscripcion suscripcion : listaSuscripciones){
+            if(suscripcion.darCliente().equals(suscriptor)){
+                listaSuscripciones.remove(suscripcion);
+                return;
+            }
 
     }
 
@@ -111,8 +150,6 @@ public class Momazon implements Servicio {
      */
     @Override
     public void agregarSuscriptor(Escuchador suscriptor) {
-        // TODO Auto-generated method stub
-
     }
 
     /**
@@ -122,7 +159,9 @@ public class Momazon implements Servicio {
      */
     @Override
     public void notificar(String mensaje) {
-        // TODO Auto-generated method stub
+        for(Suscripcion suscriptor : listaSuscripciones){
+            suscriptor.darCliente().recibirMensaje(mensaje);
+        }
 
     }
 }
