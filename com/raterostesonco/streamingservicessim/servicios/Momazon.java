@@ -23,9 +23,9 @@ public class Momazon implements Servicio {
      * correspondientes para este servicio
      */
     private Momazon() {
-    recomendaciones = new ArrayList<>(Arrays.asList("GRISELDA", "A dos metros de ti",
-                                                        "Control Z", "¿Guardarìas un secreto?", "La ley y el Orden", "Siempre el mismo dia", "PREPARADAS, LISTAS ¡AMOR!", "El turista", "Elite",
-                                                        "SEXO/VIDA", "Club de cuervos"));
+    recomendaciones = new ArrayList<>(Arrays.asList("The Boys", "The good doctor", "The night Manager",
+                                                        "Fuera de Rango", "La isla", "Borgia", "Viaje con los Derbèz", "Borgia", "FBI", "LOL",
+                                                        "The office", "Casate con mi esposo"));
         listaSuscripciones = new ArrayList<>();
     }
 

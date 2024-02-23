@@ -136,7 +136,7 @@ public class ThisneyPlus implements Servicio {
             }
         }
         if(suscripcionUsuario == null){
-            cliente.recibirMensaje("Suscripcion a HVOMax no encontrada");
+            cliente.recibirMensaje("Suscripcion a ThisNey Plus no encontrada");
             return;
         }
         if(plan == PlanesThisneyPlus.INICIAL){

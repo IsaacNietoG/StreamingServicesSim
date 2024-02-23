@@ -23,6 +23,10 @@ public class Spootify implements Servicio {
      * correspondientes para este servicio
      */
     private Spootify() {
+         recomendaciones = new ArrayList<>(Arrays.asList("Taylor Swift", "Peso Pluma", "The Weeknd",
+                                                        "Natanael Cano", "Guason bebe", "Charlie Puth", "Justin Bieber", "Gorillaz", "Bad Bunny", "Lil Wayne",
+                                                        "Kanye West", "Lana del Rey"));
+        listaSuscripciones = new ArrayList<>();
     }
 
     /**
@@ -45,7 +49,7 @@ public class Spootify implements Servicio {
     @Override
     public void enviarRecomendacion() {
         // TODO Auto-generated method stub
-
+        notificar(recomendaciones.get(new Random().nextInt(12)));
     }
 
     /**
@@ -56,7 +60,9 @@ public class Spootify implements Servicio {
     @Override
     public void cobrarClientes() {
         // TODO Auto-generated method stub
-
+        for(Suscripcion cliente : listaSuscripciones){
+            cliente.facturar();
+        }
     }
 
     /**
@@ -64,8 +70,11 @@ public class Spootify implements Servicio {
      */
     @Override
     public List<Plan> darPlanes() {
-        // TODO Auto-generated method stub
-        return null;
+        ArrayList<Plan> listaPlanes = new ArrayList<>();
+        for(PlanesSpootify plan : planes.values()){
+            listaPlanes.add(plan);
+        }
+        return listaPlanes;
     }
 
     /**
@@ -76,8 +85,19 @@ public class Spootify implements Servicio {
      */
     @Override
     public Suscripcion inscribirUsuario(Cliente usuario, Plan plan) {
-        // TODO Auto-generated method stub
-        return null;
+        ArrayList<Suscripcion> suscripcionesUsuario = usuario.darSuscripciones();
+        plan = PlanesSpootify.INICIAL;
+        for(Suscripcion suscripcion : suscripcionesUsuario){
+            if(suscripcion.darServicio() == this && suscripcion.darMesesTotales() >= 3){
+                usuario.recibirMensaje("Tus meses gratuitos de Spootify caducaron, migrando a plan normal");
+                plan = PlanesSpootify.NORMAL;
+                break;
+            }
+        }
+        Suscripcion retornar = new Suscripcion(usuario, this, plan);
+        listaSuscripciones.add(retornar);
+        return retornar;
+
     }
 
     /**
@@ -85,7 +105,24 @@ public class Spootify implements Servicio {
      */
     @Override
     public void cambiarPlanUsuario(Cliente cliente, Plan plan) {
-        // TODO Auto-generated method stub
+        Suscripcion suscripcionUsuario = null;
+        for (Suscripcion suscripcion : this.listaSuscripciones) {
+            if (suscripcion.darCliente().equals(cliente)) {
+                suscripcionUsuario = suscripcion;
+                break;
+            }
+        }
+        if(suscripcionUsuario == null){
+            cliente.recibirMensaje("Suscripcion a Spootify no encontrada");
+            return;
+        }
+        if(plan == PlanesSpootify.INICIAL){
+            if(suscripcionUsuario.darMesesTotales() > 3){
+                cliente.recibirMensaje("No puedes cambiarte a este plan, tu prueba gratuita ha vencido");
+                return;
+            }
+        }
+        suscripcionUsuario.cambioPlan(plan);
 
     }
 
@@ -98,7 +135,13 @@ public class Spootify implements Servicio {
      */
     @Override
     public void eliminarSuscriptor(Escuchador suscriptor) {
-        // TODO Auto-generated method stub
+        for(Suscripcion suscripcion : listaSuscripciones){
+            if(suscripcion.darCliente().equals(suscriptor)){
+                listaSuscripciones.remove(suscripcion);
+                return;
+            }
+        }
+
 
     }
 
@@ -110,8 +153,6 @@ public class Spootify implements Servicio {
      */
     @Override
     public void agregarSuscriptor(Escuchador suscriptor) {
-        // TODO Auto-generated method stub
-
     }
 
     /**
@@ -121,7 +162,8 @@ public class Spootify implements Servicio {
      */
     @Override
     public void notificar(String mensaje) {
-        // TODO Auto-generated method stub
-
+        for(Suscripcion suscriptor : listaSuscripciones){
+            suscriptor.darCliente().recibirMensaje(mensaje);
+        }
     }
 }
