@@ -7,7 +7,9 @@ import com.raterostesonco.streamingservicessim.servicios.planes.Plan;
 import com.raterostesonco.streamingservicessim.servicios.planes.PlanesHVOMax;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class HVOMax implements Servicio {
 
@@ -24,7 +26,10 @@ public class HVOMax implements Servicio {
      * correspondientes para este servicio
      */
     private HVOMax() {
-
+        recomendaciones = new ArrayList<>(Arrays.asList("True Detective", "The Curious Case of Natalia Grace", "Murder in Boston: Roots, Rampage & Reckoning",
+                                                        "Love Life", "Legendary", "Mrs. Fletcher", "Minx", "Gordita Chronicles", "Succession", "Euphoria",
+                                                        "Mare of Easttown", "Curb Your Enthusiasm"));
+        listaSuscripciones = new ArrayList<>();
     }
 
     /**
@@ -46,8 +51,7 @@ public class HVOMax implements Servicio {
      */
     @Override
     public void enviarRecomendacion() {
-        // TODO Auto-generated method stub
-
+        notificar(recomendaciones.get(new Random().nextInt(12)));
     }
 
     /**
@@ -57,8 +61,9 @@ public class HVOMax implements Servicio {
      */
     @Override
     public void cobrarClientes() {
-        // TODO Auto-generated method stub
-
+        for(Suscripcion cliente : listaSuscripciones){
+            cliente.facturar();
+        }
     }
 
     /**
@@ -68,8 +73,11 @@ public class HVOMax implements Servicio {
      */
     @Override
     public List<Plan> darPlanes() {
-        // TODO Auto-generated method stub
-        return null;
+        ArrayList<Plan> listaPlanes = new ArrayList<>();
+        for(PlanesHVOMax plan : planes.values()){
+            listaPlanes.add(plan);
+        }
+        return listaPlanes;
     }
 
     /**
@@ -83,8 +91,19 @@ public class HVOMax implements Servicio {
      */
     @Override
     public Suscripcion inscribirUsuario(Cliente usuario, Plan plan) {
-        // TODO Auto-generated method stub
-        return null;
+        ArrayList<Suscripcion> suscripcionesUsuario = usuario.darSuscripciones();
+        plan = PlanesHVOMax.INICIAL;
+        for(Suscripcion suscripcion : suscripcionesUsuario){
+            if(suscripcion.darServicio() == this && suscripcion.darMesesTotales() >= 3){
+                usuario.recibirMensaje("Tus meses gratuitos de HVOMax caducaron, migrando a plan normal");
+                plan = PlanesHVOMax.NORMAL;
+                break;
+            }
+        }
+        Suscripcion retornar = new Suscripcion(usuario, this, plan);
+        listaSuscripciones.add(retornar);
+        return retornar;
+
     }
 
     /**
@@ -95,7 +114,24 @@ public class HVOMax implements Servicio {
      */
     @Override
     public void cambiarPlanUsuario(Cliente cliente, Plan plan) {
-        // TODO Auto-generated method stub
+        Suscripcion suscripcionUsuario = null;
+        for (Suscripcion suscripcion : this.listaSuscripciones) {
+            if (suscripcion.darCliente().equals(cliente)) {
+                suscripcionUsuario = suscripcion;
+                break;
+            }
+        }
+        if(suscripcionUsuario == null){
+            cliente.recibirMensaje("Suscripcion a HVOMax no encontrada");
+            return;
+        }
+        if(plan == PlanesHVOMax.INICIAL){
+            if(suscripcionUsuario.darMesesTotales() > 3){
+                cliente.recibirMensaje("No puedes cambiarte a este plan, tu prueba gratuita ha vencido");
+                return;
+            }
+        }
+        suscripcionUsuario.cambioPlan(plan);
 
     }
 
@@ -108,7 +144,12 @@ public class HVOMax implements Servicio {
      */
     @Override
     public void eliminarSuscriptor(Escuchador suscriptor) {
-        // TODO Auto-generated method stub
+        for(Suscripcion suscripcion : listaSuscripciones){
+            if(suscripcion.darCliente().equals(suscriptor)){
+                listaSuscripciones.remove(suscripcion);
+                return;
+            }
+        }
 
     }
 
@@ -120,8 +161,6 @@ public class HVOMax implements Servicio {
      */
     @Override
     public void agregarSuscriptor(Escuchador suscriptor) {
-        // TODO Auto-generated method stub
-
     }
 
     /**
@@ -131,7 +170,9 @@ public class HVOMax implements Servicio {
      */
     @Override
     public void notificar(String mensaje) {
-        // TODO Auto-generated method stub
+        for(Suscripcion suscriptor : listaSuscripciones){
+            suscriptor.darCliente().recibirMensaje(mensaje);
+        }
 
     }
 }
