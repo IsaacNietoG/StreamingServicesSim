@@ -43,6 +43,10 @@ public class Spootify implements Servicio {
         return instance;
     }
 
+    public String toString() {
+        return getNombre();
+    }
+
     /**
      * Envia una recomendacion aleatoria mensualmente a todos los suscriptores del servicio
      * <p>
@@ -50,7 +54,7 @@ public class Spootify implements Servicio {
      */
     @Override
     public void enviarRecomendacion() {
-        notificar(recomendaciones.get(new Random().nextInt(12)));
+        notificar("Recomendacion mensual de " + this + ": " + recomendaciones.get(new Random().nextInt(12)));
     }
 
     /**
