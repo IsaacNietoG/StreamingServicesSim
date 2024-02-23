@@ -69,11 +69,11 @@ public class ThisneyPlus implements Servicio {
      */
     @Override
     public void cobrarClientes() {
-        for (Suscripcion cliente : listaSuscripciones) {
-            cliente.facturar();
-            if (cliente.darMesesTotales() > 3 && cliente.darPlan().equals(PlanesThisneyPlus.INICIAL)) {
-                cliente.darCliente().recibirMensaje("Tu prueba gratuita ha vencido, te cambiaremos al plan normal");
-                cliente.cambioPlan(PlanesThisneyPlus.NORMAL);
+        for(int i = 0; i < listaSuscripciones.size(); i++) {
+            listaSuscripciones.get(i).facturar();
+            if (listaSuscripciones.get(i).darMesesTotales() > 3 && listaSuscripciones.get(i).darPlan().equals(PlanesThisneyPlus.INICIAL)) {
+                listaSuscripciones.get(i).darCliente().recibirMensaje("Tu prueba gratuita ha vencido, te cambiaremos al plan normal");
+                listaSuscripciones.get(i).cambioPlan(PlanesThisneyPlus.NORMAL);
             }
         }
         enviarRecomendacion();
@@ -175,7 +175,6 @@ public class ThisneyPlus implements Servicio {
     @Override
     public void eliminarSuscriptor(Suscripcion suscriptor) {
         this.listaSuscripciones.remove(suscriptor);
-
     }
 
     /**

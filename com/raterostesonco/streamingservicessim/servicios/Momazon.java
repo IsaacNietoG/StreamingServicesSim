@@ -5,6 +5,7 @@ import com.raterostesonco.streamingservicessim.Escuchador;
 import com.raterostesonco.streamingservicessim.Suscripcion;
 import com.raterostesonco.streamingservicessim.servicios.planes.Plan;
 import com.raterostesonco.streamingservicessim.servicios.planes.PlanesMomazon;
+import com.raterostesonco.streamingservicessim.servicios.planes.PlanesThisneyPlus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +62,12 @@ public class Momazon implements Servicio {
      */
     @Override
     public void cobrarClientes() {
-        
-    for(Suscripcion cliente : listaSuscripciones){
-            cliente.facturar();
+        for(int i = 0; i < listaSuscripciones.size(); i++) {
+            listaSuscripciones.get(i).facturar();
+            if (listaSuscripciones.get(i).darMesesTotales() > 3 && listaSuscripciones.get(i).darPlan().equals(PlanesThisneyPlus.INICIAL)) {
+                listaSuscripciones.get(i).darCliente().recibirMensaje("Tu prueba gratuita ha vencido, te cambiaremos al plan normal");
+                listaSuscripciones.get(i).cambioPlan(PlanesThisneyPlus.NORMAL);
+            }
         }
         enviarRecomendacion();
     }
@@ -139,7 +143,6 @@ public class Momazon implements Servicio {
     @Override
     public void eliminarSuscriptor(Suscripcion suscriptor) {
         this.listaSuscripciones.remove(suscriptor);
-
     }
 
     /**
