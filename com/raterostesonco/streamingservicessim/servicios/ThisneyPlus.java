@@ -33,7 +33,10 @@ public class ThisneyPlus implements Servicio {
        correspondientes para este servicio
      */
     private ThisneyPlus(){
-        
+        recomendaciones = new ArrayList<>();
+        listaSuscripciones = new ArrayList<>();
+        recomendaciones.add("Recomendación 1");
+        recomendaciones.add("Recomendación 2");
     }
 
     /**
@@ -57,6 +60,11 @@ public class ThisneyPlus implements Servicio {
     @Override
     public void enviarRecomendacion() {
         // TODO Auto-generated method stub
+       Random rnd = new Random();
+        String recomendacion = recomendaciones.get(rnd.nextInt(recomendaciones.size()));
+        for (Suscripcion suscripcion : listaSuscripciones) {
+            suscripcion.getCliente().recibirMensaje("ThisneyPlus recomienda: " + recomendacion);
+        }  
         
     }
 
@@ -68,7 +76,9 @@ public class ThisneyPlus implements Servicio {
     @Override
     public void cobrarClientes() {
         // TODO Auto-generated method stub
-        
+        for (Suscripcion suscripcion : listaSuscripciones) {
+            suscripcion.facturar();
+        }
     }
 
     /**
@@ -79,7 +89,10 @@ public class ThisneyPlus implements Servicio {
     @Override
     public List<List> darPlanes() {
         // TODO Auto-generated method stub
-            return null;
+       List<Plan> planes = new ArrayList<>();
+        planes.add(PlanesThisneyPlus.NORMAL);
+        planes.add(PlanesThisneyPlus.PREMIUM);
+        return planes;
     }
 
     /**
@@ -94,7 +107,10 @@ public class ThisneyPlus implements Servicio {
     @Override
     public Suscripcion inscribirUsuario(Cliente usuario, Plan plan) {
         // TODO Auto-generated method stub
-        
+        Suscripcion nuevaSuscripcion = new Suscripcion(usuario, this, plan);
+        listaSuscripciones.add(nuevaSuscripcion);
+        usuario.agregarSuscripcion(nuevaSuscripcion);
+        return nuevaSuscripcion;
     }
 
     /**
@@ -119,7 +135,7 @@ public class ThisneyPlus implements Servicio {
     @Override
     public void eliminarSuscriptor(Escuchador suscriptor) {
         // TODO Auto-generated method stub
-        
+        listaSuscripciones.removeIf(s -> s.getCliente().equals(suscriptor));
     }
 
     /**
@@ -142,6 +158,8 @@ public class ThisneyPlus implements Servicio {
     @Override
     public void notificar(String mensaje) {
         // TODO Auto-generated method stub
-        
+        for (Suscripcion suscripcion : listaSuscripciones) {
+            suscripcion.getCliente().recibirMensaje(mensaje);
+        }
     }
 }
