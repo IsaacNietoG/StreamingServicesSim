@@ -137,13 +137,9 @@ public class Momazon implements Servicio {
      * del Servicio.
      */
     @Override
-    public void eliminarSuscriptor(Escuchador suscriptor) {
-        for (Suscripcion suscripcion : listaSuscripciones) {
-            if (suscripcion.darCliente().equals(suscriptor)) {
-                listaSuscripciones.remove(suscripcion);
-                return;
-            }
-        }
+    public void eliminarSuscriptor(Suscripcion suscriptor) {
+        this.listaSuscripciones.remove(suscriptor);
+
     }
 
     /**

@@ -71,7 +71,7 @@ public class Suscripcion {
      * 2. Setear mesesActivo a 0
      */
     public void cancelar() {
-        this.servicio.eliminarSuscriptor(cliente);
+        this.servicio.eliminarSuscriptor(this);
         this.mesesActivo = 0;
         this.cliente.recibirMensaje(this.servicio + ": Lamentamos que dejes el servicio, "+ this.cliente.darNombre());
     }

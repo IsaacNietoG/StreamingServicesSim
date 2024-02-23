@@ -172,14 +172,8 @@ public class HVOMax implements Servicio {
      * del Servicio.
      */
     @Override
-    public void eliminarSuscriptor(Escuchador suscriptor) {
-        //Se busca la suscripcion y se elimina
-        for(Suscripcion suscripcion : listaSuscripciones){
-            if(suscripcion.darCliente().equals(suscriptor)){
-                listaSuscripciones.remove(suscripcion);
-                return;
-            }
-        }
+    public void eliminarSuscriptor(Suscripcion suscriptor) {
+        this.listaSuscripciones.remove(suscriptor);
 
     }
 

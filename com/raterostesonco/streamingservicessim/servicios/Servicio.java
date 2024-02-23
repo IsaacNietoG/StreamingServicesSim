@@ -50,7 +50,7 @@ public interface Servicio extends Notificador {
     void cambiarPlanUsuario(Cliente cliente, Plan plan);
 
     //Metodos de Notificador
-    void eliminarSuscriptor(Escuchador suscriptor);
+    void eliminarSuscriptor(Suscripcion suscriptor);
 
     void agregarSuscriptor(Escuchador suscriptor);
 
