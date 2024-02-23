@@ -114,4 +114,8 @@ public class Suscripcion {
         return this.mesesActivo;
     }
 
+    public int darMesesTotales(){
+        return this.mesesTotales;
+    }
+
 }
