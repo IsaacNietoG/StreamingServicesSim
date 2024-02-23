@@ -1,5 +1,7 @@
 package com.raterostesonco.streamingservicessim.utilidades;
 
+import com.raterostesonco.streamingservicessim.Cliente;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,7 +20,11 @@ public class Logger {
         // Escribir en el archivo txt
         try (PrintWriter writer = new PrintWriter(new FileWriter(LOG_FILE, true))) {
             String timestamp = formatoFecha.format(new Date());
-            writer.println("[%s] <%s> - %s".formatted(timestamp, instancia.getClass().getSimpleName(), mensaje));
+            if(instancia instanceof Cliente) {
+                writer.println("[%s] <Cliente: %s> - %s".formatted(timestamp, ((Cliente)instancia).darNombre(), mensaje));
+            } else {
+                writer.println("[%s] <%s> - %s".formatted(timestamp, instancia.getClass().getSimpleName(), mensaje));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
