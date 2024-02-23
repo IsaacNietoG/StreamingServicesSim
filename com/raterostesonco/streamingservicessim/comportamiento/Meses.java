@@ -1,9 +1,12 @@
 package com.raterostesonco.streamingservicessim.comportamiento;
 
 import com.raterostesonco.streamingservicessim.Cliente;
+import com.raterostesonco.streamingservicessim.Suscripcion;
 import com.raterostesonco.streamingservicessim.servicios.*;
 import com.raterostesonco.streamingservicessim.servicios.planes.*;
 import com.raterostesonco.streamingservicessim.utilidades.Logger;
+
+import java.util.ArrayList;
 
 import static com.raterostesonco.streamingservicessim.comportamiento.Main.*;
 
@@ -55,7 +58,6 @@ public enum Meses {
     }),
 
     CUARTO(() -> {
-
         // Bob
         cancelarServicio(bob, Memeflix.getInstance());
         cancelarServicio(bob, Momazon.getInstance());
@@ -75,16 +77,10 @@ public enum Meses {
         diego.contratarServicio(ThisneyPlus.getInstance(), PlanesThisneyPlus.NORMAL);
 
         // Erika
-        cancelarServicio(erika, HVOMax.getInstance());
-        cancelarServicio(erika, Memeflix.getInstance());
-        cancelarServicio(erika, Momazon.getInstance());
-        cancelarServicio(erika, Spootify.getInstance());
-        cancelarServicio(erika, ThisneyPlus.getInstance());
+        cancelarTodo(erika);
 
         // Fausto
-        cancelarServicio(fausto, ThisneyPlus.getInstance());
-        cancelarServicio(fausto, HVOMax.getInstance());
-        cancelarServicio(fausto, Memeflix.getInstance());
+        cancelarTodo(fausto);
     }),
 
     SEPTIMO(() -> {
@@ -125,10 +121,29 @@ public enum Meses {
     public void simular() {
         Logger.log(this, "Simulando el mes %s...".formatted(this.name()));
         e.ejecutar();
+        cobroGlobal();
+    }
+
+    private void cobroGlobal() {
+        HVOMax.getInstance().cobrarClientes();
+        Memeflix.getInstance().cobrarClientes();
+        Spootify.getInstance().cobrarClientes();
+        ThisneyPlus.getInstance().cobrarClientes();
+        Momazon.getInstance().cobrarClientes();
     }
 
     private static void cancelarServicio(Cliente cliente, Servicio servicio) {
-        cliente.darSuscripciones().
+        ArrayList<Suscripcion> suscripciones = cliente.darSuscripciones();
+        for (Suscripcion s : suscripciones) {
+            if(s.darServicio().equals(servicio)){
+                s.cancelar();
+                break;
+            }
+        }
+    }
+
+    private static void cancelarTodo(Cliente cliente) {
+        cliente.darSuscripciones().forEach(Suscripcion::cancelar);
     }
 
     private static void contratarTodo(Cliente cliente) {

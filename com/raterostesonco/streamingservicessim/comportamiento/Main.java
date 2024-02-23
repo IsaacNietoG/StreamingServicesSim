@@ -13,9 +13,10 @@ public class Main {
             erika = new Cliente("Erika Doe", 10000),
             fausto = new Cliente("Fausto Wong", 5000);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         for (Meses mes : Meses.values()) {
             mes.simular();
+            Thread.sleep(1000);
         }
     }
 }
