@@ -26,7 +26,7 @@ public class Banco implements Notificador {
         return instance;
     }
 
-    public Banco() {
+    private Banco() {
         listaCuentas = new ArrayList<>();
     }
 
@@ -50,7 +50,7 @@ public class Banco implements Notificador {
      */
     @Override
     public void agregarSuscriptor(Escuchador suscriptor) {
-        // TODO Auto-generated method stub
+        listaCuentas.add((Cliente)suscriptor);
 
     }
 
@@ -70,8 +70,11 @@ public class Banco implements Notificador {
      * Asi mismo, también debe de notificarle al cliente mediante su respecitvo método recibirMensaje()
      */
     public boolean cobrarCliente(Cliente cliente, double importe, String razon) {
-        // TODO
-        return false;
+        cliente.recibirMensaje(razon);
+        if (!cliente.recibirCobro(importe)){
+            return false;
+        }
+        return true;
     }
 
 
