@@ -1,7 +1,7 @@
 package com.raterostesonco.streamingservicessim.servicios.planes;
 
 public enum PlanesThisneyPlus implements Plan {
-    NORMAL(130), PREMIUM(160);
+    INICIAL(130), NORMAL(160);
 
     double precio;
 

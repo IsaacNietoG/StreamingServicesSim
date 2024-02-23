@@ -9,12 +9,14 @@ import com.raterostesonco.streamingservicessim.servicios.planes.PlanesMemeflix;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import java.util.Random;
 
 public class Memeflix implements Servicio {
     PlanesMemeflix planes; //Enum
-    ArrayList<String> recomendaciones;
-    ArrayList<Suscripcion> listaSuscripciones;
-    Memeflix instance;
+    private ArrayList<String> recomendaciones;
+    private ArrayList<Suscripcion> listaSuscripciones;
+    static Memeflix instance;
 
     /**
      * Constructor de la clase Memeflix
@@ -35,7 +37,7 @@ public class Memeflix implements Servicio {
      * <p>
      * Funciona simple, si no existe una instancia, la crea, y si existe, retorna la unica instancia que debe de existir.
      */
-    public Memeflix getInstance() {
+    public static Memeflix getInstance() {
         if (instance == null) {
             instance = new Memeflix();
         }
@@ -49,7 +51,6 @@ public class Memeflix implements Servicio {
      */
     @Override
     public void enviarRecomendacion() {
-        // TODO Auto-generated method stub
         notificar(recomendaciones.get(new Random().nextInt(12)));
     }
 
@@ -60,10 +61,10 @@ public class Memeflix implements Servicio {
      */
     @Override
     public void cobrarClientes() {
-        // TODO Auto-generated method stub
         for(Suscripcion cliente : listaSuscripciones){
             cliente.facturar();
         }
+        enviarRecomendacion();
     }
 
     /**
@@ -87,13 +88,20 @@ public class Memeflix implements Servicio {
     @Override
     public Suscripcion inscribirUsuario(Cliente usuario, Plan plan) {
         ArrayList<Suscripcion> suscripcionesUsuario = usuario.darSuscripciones();
-        plan = PlanesMemeflix.INICIAL;
+        Suscripcion previa = null;
+        //Buscando suscripcion previa
         for(Suscripcion suscripcion : suscripcionesUsuario){
-            if(suscripcion.darServicio() == this && suscripcion.darMesesTotales() >= 3){
-                usuario.recibirMensaje("Tus meses gratuitos de Memeflix caducaron, migrando a plan normal");
-                plan = PlanesMemeflix.NORMAL;
+            if(suscripcion.darServicio().equals(this)){
+                previa = suscripcion;
                 break;
             }
+        }
+
+        //Si existe una suscripcion previa, retornar esa misma y volverla a agregar.
+        if(previa != null){
+            listaSuscripciones.add(previa);
+            suscripcionesUsuario.remove(previa);
+            return previa;
         }
         Suscripcion retornar = new Suscripcion(usuario, this, plan);
         listaSuscripciones.add(retornar);
@@ -116,12 +124,6 @@ public class Memeflix implements Servicio {
             cliente.recibirMensaje("Suscripcion a Memeflix no encontrada");
             return;
         }
-        if(plan == PlanesMemeflix.INICIAL){
-            if(suscripcionUsuario.darMesesTotales() > 3){
-                cliente.recibirMensaje("No puedes cambiarte a este plan, tu prueba gratuita ha vencido");
-                return;
-            }
-        }
         suscripcionUsuario.cambioPlan(plan);
     }
 
@@ -134,12 +136,12 @@ public class Memeflix implements Servicio {
      */
     @Override
     public void eliminarSuscriptor(Escuchador suscriptor) {
-        for(Suscripcion suscripcion : listaSuscripciones){
-            if(suscripcion.darCliente().equals(suscriptor)){
+        for (Suscripcion suscripcion : listaSuscripciones) {
+            if (suscripcion.darCliente().equals(suscriptor)) {
                 listaSuscripciones.remove(suscripcion);
                 return;
             }
-
+        }
     }
 
     /**

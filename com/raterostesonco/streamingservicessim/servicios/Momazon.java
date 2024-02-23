@@ -8,12 +8,15 @@ import com.raterostesonco.streamingservicessim.servicios.planes.PlanesMomazon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
+import java.util.Random;
 
 public class Momazon implements Servicio {
     PlanesMomazon planes; //Enum
-    ArrayList<String> recomendaciones;
-    ArrayList<Suscripcion> listaSuscripciones;
-    Momazon instance;
+    private ArrayList<String> recomendaciones;
+    private ArrayList<Suscripcion> listaSuscripciones;
+    static Momazon instance;
+    
 
     /**
      * Constructor de la clase Momazon
@@ -34,7 +37,7 @@ public class Momazon implements Servicio {
      * <p>
      * Funciona simple, si no existe una instancia, la crea, y si existe, retorna la unica instancia que debe de existir.
      */
-    public Momazon getInstance() {
+    public static Momazon getInstance() {
         if (instance == null) {
             instance = new Momazon();
         }
@@ -62,7 +65,9 @@ public class Momazon implements Servicio {
     for(Suscripcion cliente : listaSuscripciones){
             cliente.facturar();
         }
+        enviarRecomendacion();
     }
+
 
     /**
      * Retorna todos los src.main.com.raterostesonco.streamingservicessim.servicios.planes posibles que se pueden contratar de este servicio.
@@ -84,19 +89,25 @@ public class Momazon implements Servicio {
      */
     @Override
     public Suscripcion inscribirUsuario(Cliente usuario, Plan plan) {
-      ArrayList<Suscripcion> suscripcionesUsuario = usuario.darSuscripciones();
-        plan = PlanesMomazon.INICIAL;
-        for(Suscripcion suscripcion : suscripcionesUsuario){
-            if(suscripcion.darServicio() == this && suscripcion.darMesesTotales() >= 3){
-                usuario.recibirMensaje("Tus meses gratuitos de Momazon caducaron, migrando a plan normal");
-                plan = PlanesMomazon.NORMAL;
+        ArrayList<Suscripcion> suscripcionesUsuario = usuario.darSuscripciones();
+        Suscripcion previa = null;
+        // Buscando suscripcion previa
+        for (Suscripcion suscripcion : suscripcionesUsuario) {
+            if (suscripcion.darServicio().equals(this)) {
+                previa = suscripcion;
                 break;
             }
+        }
+
+        // Si existe una suscripcion previa, retornar esa misma y volverla a agregar.
+        if (previa != null) {
+            listaSuscripciones.add(previa);
+            suscripcionesUsuario.remove(previa);
+            return previa;
         }
         Suscripcion retornar = new Suscripcion(usuario, this, plan);
         listaSuscripciones.add(retornar);
         return retornar;
-
     }
 
     /**
@@ -104,23 +115,16 @@ public class Momazon implements Servicio {
      */
     @Override
     public void cambiarPlanUsuario(Cliente cliente, Plan plan) {
-        // TODO Auto-generated method stub
-    Suscripcion suscripcionUsuario = null;
+        Suscripcion suscripcionUsuario = null;
         for (Suscripcion suscripcion : this.listaSuscripciones) {
             if (suscripcion.darCliente().equals(cliente)) {
                 suscripcionUsuario = suscripcion;
                 break;
             }
         }
-        if(suscripcionUsuario == null){
-            cliente.recibirMensaje("Suscripcion a Momazon no encontrada");
+        if (suscripcionUsuario == null) {
+            cliente.recibirMensaje("Suscripcion a Memeflix no encontrada");
             return;
-        }
-        if(plan == PlanesMomazon.INICIAL){
-            if(suscripcionUsuario.darMesesTotales() > 3){
-                cliente.recibirMensaje("No puedes cambiarte a este plan, tu prueba gratuita ha vencido");
-                return;
-            }
         }
         suscripcionUsuario.cambioPlan(plan);
     }
@@ -134,12 +138,12 @@ public class Momazon implements Servicio {
      */
     @Override
     public void eliminarSuscriptor(Escuchador suscriptor) {
-        for(Suscripcion suscripcion : listaSuscripciones){
-            if(suscripcion.darCliente().equals(suscriptor)){
+        for (Suscripcion suscripcion : listaSuscripciones) {
+            if (suscripcion.darCliente().equals(suscriptor)) {
                 listaSuscripciones.remove(suscripcion);
                 return;
             }
-
+        }
     }
 
     /**
